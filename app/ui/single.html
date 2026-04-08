@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Single Image - Cattle Health AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+</head>
+<body>
+<div class="card">
+  <a class="back-link" href="/">← Back to home</a>
+  <h1>🖼️ Single Image Analysis</h1>
+  <p>Upload a cattle face / nose / body / foot image to predict its health status.</p>
+
+  <form method="POST" action="/predict/single" enctype="multipart/form-data">
+    <input type="file" name="image" accept="image/*" required><br><br>
+    <button type="submit">Analyse</button>
+  </form>
+
+  {% if label %}
+  <hr>
+  <h2>Result</h2>
+  <p class="{{ 'healthy' if label == 'Healthy' else 'sick' }}">
+    {{ '✅' if label == 'Healthy' else '⚠️' }} {{ label }}
+  </p>
+  <p>Confidence: <strong>{{ (confidence * 100) | round(1) }}%</strong></p>
+
+  <div>
+    {% for cls, prob in probs.items() %}
+    <div style="margin-bottom:6px">
+      <span>{{ cls }}</span>
+      <div class="bar-bg">
+        <div class="bar-fill" 
+            style="width: {{ (prob*100) | int }}%;
+                background: {{ '#2e7d32' if cls == 'Healthy' else '#c62828' }}">
+        </div>
+      </div>
+      <small>{{ (prob*100)|round(1) }}%</small>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if cam_img %}
+    <h3>Grad-CAM (What the model looked at)</h3>
+    <img class="result" src="/static/uploads/{{ cam_img }}" alt="Grad-CAM">
+  {% endif %}
+  <img class="result" src="/static/uploads/{{ orig_img }}" alt="Input image">
+  {% endif %}
+</div>
+</body>
+</html>

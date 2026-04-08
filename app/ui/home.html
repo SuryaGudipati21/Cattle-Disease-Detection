@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cattle Health AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+</head>
+<body>
+<div class="card">
+  <h1>🐄 Cattle Health Predictor</h1>
+  <p>Choose how you want to analyse images:</p>
+  <div style="display:flex; flex-wrap:wrap; margin-top:20px;">
+    <a class="mode-card" href="/upload/single">
+      <span class="icon">🖼️</span>
+      <h3>Single Image</h3>
+      <p>Upload one image and get<br>an instant result with Grad-CAM</p>
+    </a>
+    <a class="mode-card" href="/upload/folder">
+      <span class="icon">📂</span>
+      <h3>Folder (Batch)</h3>
+      <p>Upload multiple images at once<br>and get a full batch report</p>
+    </a>
+  </div>
+</div>
+</body>
+</html>

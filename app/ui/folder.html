@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Batch Upload - Cattle Health AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+</head>
+<body>
+<div class="card">
+  <a class="back-link" href="/">← Back to home</a>
+  <h1>📂 Batch Folder Analysis</h1>
+  <p>Select <strong>all images in a folder</strong> at once. Use
+     <em>Ctrl+A</em> (or <em>Cmd+A</em>) inside the file picker to select everything.</p>
+
+  <form method="POST" action="/predict/batch" enctype="multipart/form-data">
+    <input type="file" name="images" accept="image/*" multiple required><br><br>
+    <button type="submit">Analyse All</button>
+  </form>
+</div>
+</body>
+</html>

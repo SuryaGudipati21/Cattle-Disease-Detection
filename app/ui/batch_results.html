@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Batch Results - Cattle Health AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+  <style>
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .img-card {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,.12);
+      border: 3px solid transparent;
+      background: white;
+    }
+    .img-card.healthy { border-color: #2e7d32; }
+    .img-card.sick    { border-color: #c62828; }
+    .img-card img {
+      width: 100%; height: 160px; object-fit: cover; display: block;
+    }
+    .img-card .info {
+      padding: 8px 10px;
+    }
+    .img-card .info .name {
+      font-size: .78em; color: #555; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;
+    }
+    .img-card .info .label-row {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .img-card .info .label-text {
+      font-weight: bold; font-size: .9em;
+    }
+    .img-card.healthy .label-text { color: #2e7d32; }
+    .img-card.sick    .label-text { color: #c62828; }
+    .img-card .info .conf {
+      font-size: .78em; color: #888;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <a class="back-link" href="/">← Back to home</a>
+  <h1>📊 Batch Results</h1>
+
+  <!-- Summary counts -->
+  <div class="summary-box">
+    <strong>Total images processed:</strong> {{ total }}<br>
+    ✅ <strong>Healthy:</strong> {{ healthy_count }} &nbsp;|&nbsp;
+    ⚠️  <strong>Possibly Sick:</strong> {{ sick_count }}
+  </div>
+
+  <!-- Summary chart embedded -->
+  {% if summary_img %}
+  <h3>Prediction Summary</h3>
+  <img class="result" src="/static/uploads/{{ summary_img }}" alt="Prediction Summary">
+  {% endif %}
+
+  <!-- Download buttons -->
+  <div style="margin: 16px 0;">
+    {% if csv_file %}
+    <a class="dl-btn" style="background:#1565c0" href="/download/{{ csv_file }}" download>⬇ Download CSV</a>
+    {% endif %}
+    {% if summary_img %}
+    <a class="dl-btn" style="background:#6a1b9a" href="/download/{{ summary_img }}" download>⬇ Download Summary Chart</a>
+    {% endif %}
+  </div>
+
+  <hr>
+
+  <!-- Visual image grid -->
+  <h3>Individual Predictions</h3>
+  <div class="grid">
+    {% for r in results %}
+    <div class="img-card {{ 'healthy' if r.label == 'Healthy' else 'sick' }}">
+      <img src="/static/uploads/{{ r.saved_fname }}" alt="{{ r.filename }}">
+      <div class="info">
+        <div class="name" title="{{ r.filename }}">{{ r.filename }}</div>
+        <div class="label-row">
+          <span class="label-text">
+            {{ '✅ Healthy' if r.label == 'Healthy' else '⚠️ Sick' }}
+          </span>
+          <span class="conf">{{ (r.confidence * 100)|round(1) }}%</span>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+</body>
+</html>
